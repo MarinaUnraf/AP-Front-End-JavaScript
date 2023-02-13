@@ -1,0 +1,30 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+:root{
+    --bs-gradient:linear-gradient(to right, #1a246c, #c22167);
+    --bs-text-light:#e8d7e1;
+    
+    
+}
+
+nav{
+    color: var(--bs-text-light);
+    background-image: var(--bs-gradient);
+}
+
+footer{
+    color: var(--bs-text-light);
+    background-image: var(--bs-gradient);
+}
+footer div a{
+    color: var(--bs-text-light);
+    
+}
+
+.fa{
+    font-size: x-large;
+}
+
