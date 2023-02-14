@@ -10,6 +10,7 @@
     
 }
 
+
 nav{
     color: var(--bs-text-light);
     background-image: var(--bs-gradient);
@@ -18,6 +19,7 @@ nav{
 footer{
     color: var(--bs-text-light);
     background-image: var(--bs-gradient);
+    
 }
 footer div a{
     color: var(--bs-text-light);
@@ -28,3 +30,9 @@ footer div a{
     font-size: x-large;
 }
 
+/* card styles */
+
+.card-img-top {
+    max-height: 10vh;
+    object-fit: cover;
+}
