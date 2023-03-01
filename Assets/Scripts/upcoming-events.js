@@ -1,16 +1,16 @@
 const currentDate = data.currentDate;
+const eventData = data.events;
 
  showEventList();
+ showCategories();
 
 
 function showEventList() {
-    const eventList = document.querySelector("#templateTarjetas");
+    const eventList = document.querySelector("#templateTarjetas")
+
+    let cardEventSaved =''
     
-    let cardEventSaved = "";
-    let eventcards = data.events;
-    
-    
-    for (const event of eventcards) {
+    eventData.forEach(event => {
         if (event.date > currentDate){
 
             cardEventSaved += ` <div class="col-sm-3 m-2">
@@ -30,9 +30,27 @@ function showEventList() {
             </div>
         </div>`
         }
-       
-        
-    }
+    });
     eventList.innerHTML = cardEventSaved;
+    
+}
+
+function showCategories() {
+
+    const eventCategoriesList = document.querySelector("#contenedorCategorias")
+
+    let categoriesSaved = ''
+    let eventCatAr = eventData.map(ev => ev.category)
+    
+    let uniqEventCatAr = new Set (eventCatAr)
+    
+    uniqEventCatAr.forEach(eventcategory => {
+        categoriesSaved += `<div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="${eventcategory}">
+        <label class="form-check-label" for="inlineCheckbox1">${eventcategory}</label>
+    </div>`
+    });
+    
+    eventCategoriesList.innerHTML = categoriesSaved;
     
 }
