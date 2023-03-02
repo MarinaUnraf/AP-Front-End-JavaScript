@@ -2,19 +2,22 @@ const currentDate = data.currentDate;
 const eventData = data.events;
 
 /*  Shows event cards */
- /* showEventList(); */
- showEventListJ();
-showCategories();
+
+ showEventListJ(eventData);
+showCategories(eventData);
 
 
 
-    function showEventListJ() {
+    function showEventListJ(arrData) {
 
-        const eventList = document.querySelector("#templateTarjetas")
-
+        
+        let eventList = document.querySelector("#templateTarjetas")
+        
+        eventList.innerHTML = ""
+        
         let cardEventSaved =''
         
-        eventData.forEach(event => {
+        arrData.forEach(event => {
             cardEventSaved += ` <div class="col-sm-3 m-2">
             <div class="card" style="width: 20rem; height: 24rem;">
                 <img src="${event.image}" class="card-img-top" alt="...">
@@ -64,30 +67,26 @@ const searchForm = document.querySelector("form");
 /* add listener to the event */
 searchForm.addEventListener('submit', inputEventName)
 
-    /* capture the event into a varible and compare with the name event list */
+
 function inputEventName( event) {
        
-    event.preventDefault(); 
-       let searchTermList = {
-            wordSearched: event.target[0].value
-       }
-   
-    inputsearch = searchTermList.wordSearched.toLowerCase()
-    
-    /*  List of name events from the data object */
-    let eventNames= []
-    for (const event of eventData) {
-        /* fill the empty array */
-        eventNames.push (event.name.toLowerCase())
+    event.preventDefault();
+    /* capture input tex */
+    inputText = event.target[0].value.toLowerCase()
         
-    }
+    /* creating new object array filtering the event name */
+    let newEventData = eventData.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
+    console.log(newEventData);
     
     
-    /* search names from the name event list */
-    let namesMatched = eventNames.filter((eName) => eName.includes(inputsearch) )
     
-    console.log(namesMatched);
-
+    showEventListJ(newEventData)
 }
 
 
+/* filter events by category */
+
+
+let eventCatAr = eventData.map((ev) => ev.category);
+
+let uniqEventCatAr = new Set(eventCatAr);

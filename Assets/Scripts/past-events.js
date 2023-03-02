@@ -1,20 +1,21 @@
 const currentDate = data.currentDate;
 const eventData = data.events;
 
-/*  Shows event cards */
- /* showEventList(); */
-  showPastEventList();
-  showCategories();
+
+  showPastEventList(eventData);
+  showCategories(eventData);
 
 
+        /* show past events cards */
+    function showPastEventList(arrData) {
 
-    function showPastEventList() {
+        let eventList = document.querySelector("#templateTarjetas")
 
-        const eventList = document.querySelector("#templateTarjetas")
-
+        eventList.innerHTML= ''
+        
         let cardEventSaved =''
         
-        eventData.forEach(event => {
+        arrData.forEach(event => {
             if (event.date < currentDate){
 
                 cardEventSaved += ` <div class="col-sm-3 m-2">
@@ -57,3 +58,28 @@ const eventData = data.events;
         eventCategoriesList.innerHTML = categoriesSaved;
         
     }
+
+    /* search events by form */
+
+
+/*Function input and search event name  */
+/* get element from DOM */
+const searchForm = document.querySelector("form");
+/* add listener to the event */
+searchForm.addEventListener('submit', inputEventName)
+
+
+function inputEventName( event) {
+       
+    event.preventDefault();
+    /* capture input tex */
+    inputText = event.target[0].value.toLowerCase()
+        
+    /* creating new object array filtering the event name */
+    let newEventData = eventData.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
+    console.log(newEventData);
+    
+    
+    
+    showPastEventList(newEventData)
+}
