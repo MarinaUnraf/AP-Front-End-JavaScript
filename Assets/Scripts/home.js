@@ -6,7 +6,7 @@ const eventData = data.events;
  showEventListJ(eventData);
 showCategories(eventData);
 
-
+console.log([document]);
 
     function showEventListJ(arrData) {
 
@@ -16,26 +16,31 @@ showCategories(eventData);
         eventList.innerHTML = ""
         
         let cardEventSaved =''
-        
-        arrData.forEach(event => {
-            cardEventSaved += ` <div class="col-sm-3 m-2">
-            <div class="card" style="width: 20rem; height: 24rem;">
-                <img src="${event.image}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">${event.name}</h5>
-                    <p class="card-text">${event.description}</p>
-                    <p><b>Date: </b>${event.date}</p>
-                    
+
+        if (arrData.length > 0){
+            arrData.forEach(event => {
+                cardEventSaved += ` <div class="col-sm-3 m-2">
+                <div class="card" style="width: 20rem; height: 24rem;">
+                    <img src="${event.image}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">${event.name}</h5>
+                        <p class="card-text">${event.description}</p>
+                        <p><b>Date: </b>${event.date}</p>
+                        
+                    </div>
+                    <div class="card-footer d-flex justify-content-between align-items-baseline">
+                        
+                    <p>${event.category}</p>
+                     <a href="./details.html?id=${event._id}" class="btn btn-primary "> See Details </a>
+                    </div>
                 </div>
-                <div class="card-footer d-flex justify-content-between align-items-baseline">
-                    
-                <p>${event.category}</p>
-                    <a href="#" class="btn btn-primary "> See Details </a>
-                </div>
-            </div>
-        </div>`
-        });
-        eventList.innerHTML = cardEventSaved;
+            </div>`
+            });           
+            
+            eventList.innerHTML = cardEventSaved;
+        } else{
+            eventList.innerHTML = "<p>No results found</p>";
+        }
     }
 
     /* show categories */
