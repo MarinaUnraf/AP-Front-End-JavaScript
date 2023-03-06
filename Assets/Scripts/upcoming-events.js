@@ -78,13 +78,17 @@ function inputEventName( event) {
     /* capture input tex */
     inputText = event.target[0].value.toLowerCase()
         
-    /* creating new object array filtering the event name */
-    let newEventData = eventData.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
-    console.log(newEventData);
-    
-    
-    
-    showEventListJ(newEventData)
+    if( checkEventCards.length > 0){
+        /* creating new object array filtering the event name */
+        newEventData = checkEventCards.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
+        showEventListJ(newEventData)
+    }
+    else if (checkEventCards.length == 0 ) {
+          /* creating new object array filtering the event name */
+          newEventData = eventData.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
+          showEventListJ(newEventData)
+    }
+
 }
 
 /* filter events by category */
@@ -108,7 +112,7 @@ checkboxEvent.forEach(checkbox => {
     })
 } );
 
-
+let checkEventCards = [];
 function checkedCategoryCards(checked) {
         let checkEventCards = []
         checked.forEach(category => {

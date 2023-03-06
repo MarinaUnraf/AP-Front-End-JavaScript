@@ -72,6 +72,7 @@ const searchForm = document.querySelector("form");
 /* add listener to the event */
 searchForm.addEventListener('submit', inputEventName)
 
+let newEventData = [];
 
 function inputEventName( event) {
        
@@ -79,13 +80,21 @@ function inputEventName( event) {
     /* capture input tex */
     inputText = event.target[0].value.toLowerCase()
         
-    /* creating new object array filtering the event name */
-    let newEventData = checkEventCards.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
-    console.log(newEventData);
+    if( checkEventCards.length > 0){
+        /* creating new object array filtering the event name */
+        newEventData = checkEventCards.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
+        showEventListJ(newEventData)
+    }
+    else if (checkEventCards.length == 0 ) {
+          /* creating new object array filtering the event name */
+          newEventData = eventData.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
+          showEventListJ(newEventData)
+    }
+
     
     
     
-    showEventListJ(newEventData)
+    
 }
 
 
@@ -110,17 +119,17 @@ checkboxEvent.forEach(checkbox => {
     })
 } );
 
-
 let checkEventCards = [];
 function checkedCategoryCards(checked) {
-        checked.forEach(category => {
-                const checkedEventList = eventData.filter(event => event.category == category);
-                checkedEventList.forEach(event => checkEventCards.push(event));
+    checkEventCards = [];
+    checked.forEach(category => {
+            const checkedEventList = eventData.filter(event => event.category == category);
+            checkedEventList.forEach(event => checkEventCards.push(event));
 
-        });
-        if(checkEventCards.length > 0){
-            showEventListJ(checkEventCards)
-         }
-         else{showEventListJ(eventData)}
+    });
+    if(checkEventCards.length > 0){
+        showEventListJ(checkEventCards)
+     }
+     else{showEventListJ(eventData)}
 }
 
