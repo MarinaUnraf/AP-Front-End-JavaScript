@@ -89,3 +89,39 @@ function inputEventName( event) {
     
     showPastEventList(newEventData)
 }
+
+/* filter events by category */
+
+
+let checkboxEvent = document.querySelectorAll(".form-check-input");
+console.log(checkboxEvent);
+
+let checked = []
+checkboxEvent.forEach(checkbox => {
+    checkbox.addEventListener("click", ()=> {
+        if(checkbox.checked === true){
+            checked.push(checkbox.value);
+            checkedCategoryCards(checked)
+        }
+        else
+        {
+            checked = checked.filter(category => category !== checkbox.value);
+            checkedCategoryCards(checked)
+        }  
+    })
+} );
+
+
+function checkedCategoryCards(checked) {
+        let checkEventCards = []
+        checked.forEach(category => {
+                const checkedEventList = eventData.filter(event => event.category == category);
+                checkedEventList.forEach(event => checkEventCards.push(event));
+
+        });
+     
+     if(checkEventCards.length > 0){
+        showPastEventList(checkEventCards)
+     }
+     else{showPastEventList(eventData)}
+}

@@ -80,7 +80,7 @@ function inputEventName( event) {
     inputText = event.target[0].value.toLowerCase()
         
     /* creating new object array filtering the event name */
-    let newEventData = eventData.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
+    let newEventData = checkEventCards.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
     console.log(newEventData);
     
     
@@ -92,6 +92,35 @@ function inputEventName( event) {
 /* filter events by category */
 
 
-let eventCatAr = eventData.map((ev) => ev.category);
+let checkboxEvent = document.querySelectorAll(".form-check-input");
+/* console.log(checkboxEvent); */
 
-let uniqEventCatAr = new Set(eventCatAr);
+let checked = []
+checkboxEvent.forEach(checkbox => {
+    checkbox.addEventListener("click", ()=> {
+        if(checkbox.checked === true){
+            checked.push(checkbox.value);
+            checkedCategoryCards(checked)
+        }
+        else
+        {
+            checked = checked.filter(category => category !== checkbox.value);
+            checkedCategoryCards(checked)
+        }  
+    })
+} );
+
+
+let checkEventCards = [];
+function checkedCategoryCards(checked) {
+        checked.forEach(category => {
+                const checkedEventList = eventData.filter(event => event.category == category);
+                checkedEventList.forEach(event => checkEventCards.push(event));
+
+        });
+        if(checkEventCards.length > 0){
+            showEventListJ(checkEventCards)
+         }
+         else{showEventListJ(eventData)}
+}
+
