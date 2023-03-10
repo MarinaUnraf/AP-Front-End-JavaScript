@@ -1,12 +1,38 @@
-const currentDate = data.currentDate;
-const eventData = data.events;
+/* const currentDate = data.currentDate;
+const eventData = data.events; */
+/* const currentDate = fetchedData.currentDate;
+const eventData = fetchedData.events;
+ */
+/* creating the empty array to save the API response */
+let fetchedData =[];
+
+/* async funtion for fetching the API */
+
+function getEventsData(){
+    fetch("https://mindhub-xj03.onrender.com/api/amazing")
+    .then(response => response.json())
+    .then(dataApi => {
+                //console.log(dataApi);
+                fetchedData = dataApi;
+                /* console.log(fetchedData); */
+                const eventData = fetchedData.events;
+                /* console.log(eventData); */
+               showEventListJ(eventData);
+               showCategories(eventData);
+               filterCheckbox();
+               checkedCategoryCards(eventData);
+                
+    } )
+
+}
+getEventsData();
+
 
 /*  Shows event cards */
 
- showEventListJ(eventData);
-showCategories(eventData);
 
-console.log([document]);
+
+//console.log([document]);
 
     function showEventListJ(arrData) {
 
@@ -44,12 +70,12 @@ console.log([document]);
     }
 
     /* show categories */
-    function showCategories() {
+    function showCategories(arrData) {
 
         const eventCategoriesList = document.querySelector("#contenedorCategorias")
 
         let categoriesSaved = ''
-        let eventCatAr = eventData.map(ev => ev.category)
+        let eventCatAr = arrData.map(ev => ev.category)
        
         let uniqEventCatAr = new Set (eventCatAr)
         
@@ -87,7 +113,7 @@ function inputEventName( event) {
     }
     else if (checkEventCards.length == 0 ) {
           /* creating new object array filtering the event name */
-          newEventData = eventData.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
+          newEventData = fetchedData.events.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
           showEventListJ(newEventData)
     }
 
@@ -101,35 +127,46 @@ function inputEventName( event) {
 /* filter events by category */
 
 
-let checkboxEvent = document.querySelectorAll(".form-check-input");
-/* console.log(checkboxEvent); */
 
-let checked = []
-checkboxEvent.forEach(checkbox => {
-    checkbox.addEventListener("click", ()=> {
-        if(checkbox.checked === true){
-            checked.push(checkbox.value);
-            checkedCategoryCards(checked)
-        }
-        else
-        {
-            checked = checked.filter(category => category !== checkbox.value);
-            checkedCategoryCards(checked)
-        }  
-    })
-} );
+
+function filterCheckbox() {
+        let checkboxEvent = document.querySelectorAll(".form-check-input");
+    
+        
+    
+        let checked = [];
+        
+        checkboxEvent.forEach(checkbox => {
+            checkbox.addEventListener("click", ()=> {
+                if(checkbox.checked === true){
+                    checked.push(checkbox.value);
+                    checkedCategoryCards(checked)
+                }
+                else
+                {
+                    checked = checked.filter(category => category !== checkbox.value);
+                    checkedCategoryCards(checked)
+                }  
+            })
+        } );
+}
+  
+
+
 
 let checkEventCards = [];
 function checkedCategoryCards(checked) {
     checkEventCards = [];
+    console.log(checkEventCards);
     checked.forEach(category => {
-            const checkedEventList = eventData.filter(event => event.category == category);
+            const checkedEventList = fetchedData.events.filter(event => event.category == category);
             checkedEventList.forEach(event => checkEventCards.push(event));
 
     });
     if(checkEventCards.length > 0){
         showEventListJ(checkEventCards)
      }
-     else{showEventListJ(eventData)}
+     else{showEventListJ(fetchedData.events)}
 }
+
 
