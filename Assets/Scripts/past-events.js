@@ -1,13 +1,39 @@
-const currentDate = data.currentDate;
-const eventData = data.events;
 
 
-  showPastEventList(eventData);
-  showCategories(eventData);
+  
+
+/* creating the empty array to save the API response */
+let fetchedData =[];
+
+/* async funtion for fetching the API */
+
+function getEventsData(){
+    fetch("https://mindhub-xj03.onrender.com/api/amazing")
+    .then(response => response.json())
+    .then(dataApi => {
+                //console.log(dataApi);
+                fetchedData = dataApi;
+                console.log(fetchedData);
+                const eventData = fetchedData.events;
+                const pastEventData = fetchedData.events.filter(event => event.date < fetchedData.currentDate)
+               
+                console.log(pastEventData);
+               showPastEventList(pastEventData);
+               showCategories(pastEventData);
+               filterCheckbox();
+               checkedCategoryCards(pastEventData);
+                
+    } )
+
+}
+getEventsData();
+
+
+
 
 
         /* show past events cards */
-    function showPastEventList(arrData) {
+    function showPastEventList(arrData, dateToday) {
 
         let eventList = document.querySelector("#templateTarjetas")
 
@@ -15,42 +41,43 @@ const eventData = data.events;
         
         let cardEventSaved =''
         
+        
         if(arrData.length > 0) {
 
             arrData.forEach(event => {
-                if (event.date < currentDate){
-    
-                    cardEventSaved += ` <div class="col-sm-3 m-2">
-                    <div class="card" style="width: 20rem; height: 24rem;">
-                        <img src="${event.image}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">${event.name}</h5>
-                            <p class="card-text">${event.description}</p>
-                            <p><b>Date: </b>${event.date}</p>
-                            
-                        </div>
-                        <div class="card-footer d-flex justify-content-between align-items-baseline">
-                            
-                        <p>${event.category}</p>
-                        <a href="./details.html?id=${event._id}" class="btn btn-primary "> See Details </a>
-                        </div>
+               
+                cardEventSaved += ` <div class="col-sm-3 m-2">
+                <div class="card" style="width: 20rem; height: 24rem;">
+                    <img src="${event.image}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">${event.name}</h5>
+                        <p class="card-text">${event.description}</p>
+                        <p><b>Date: </b>${event.date}</p>
+                        
                     </div>
-                </div>`
-                }
+                    <div class="card-footer d-flex justify-content-between align-items-baseline">
+                        
+                    <p>${event.category}</p>
+                    <a href="./details.html?id=${event._id}" class="btn btn-primary "> See Details </a>
+                    </div>
+                </div>
+            </div>`
             });
 
             eventList.innerHTML = cardEventSaved;
         } else{
             eventList.innerHTML = "<p>No results found</p>";
         }
+        
     }
 
-    function showCategories() {
+
+    function showCategories(arrData) {
 
         const eventCategoriesList = document.querySelector("#contenedorCategorias")
 
         let categoriesSaved = ''
-        let eventCatAr = eventData.map(ev => ev.category)
+        let eventCatAr = arrData.map(ev => ev.category)
         
         let uniqEventCatAr = new Set (eventCatAr)
         
@@ -88,7 +115,7 @@ function inputEventName( event) {
     }
     else if (checkEventCards.length == 0 ) {
           /* creating new object array filtering the event name */
-          newEventData = eventData.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
+          newEventData = fetchedData.events.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
           showPastEventList(newEventData)
     }
 
@@ -97,35 +124,45 @@ function inputEventName( event) {
 /* filter events by category */
 
 
-let checkboxEvent = document.querySelectorAll(".form-check-input");
-console.log(checkboxEvent);
-
-let checked = []
-checkboxEvent.forEach(checkbox => {
-    checkbox.addEventListener("click", ()=> {
-        if(checkbox.checked === true){
-            checked.push(checkbox.value);
-            checkedCategoryCards(checked)
-        }
-        else
-        {
-            checked = checked.filter(category => category !== checkbox.value);
-            checkedCategoryCards(checked)
-        }  
-    })
-} );
+function filterCheckbox() {
+    let checkboxEvent = document.querySelectorAll(".form-check-input");
+    //console.log(checkboxEvent);
+    
+    let checked = []
+    checkboxEvent.forEach(checkbox => {
+        checkbox.addEventListener("click", ()=> {
+            if(checkbox.checked === true){
+                checked.push(checkbox.value);
+                checkedCategoryCards(checked)
+            }
+            else
+            {
+                checked = checked.filter(category => category !== checkbox.value);
+                checkedCategoryCards(checked)
+            }  
+        })
+    } );
+}
+filterCheckbox();
 
 let checkEventCards= [];
+
+
 function checkedCategoryCards(checked) {
         let checkEventCards = []
+        
+        
         checked.forEach(category => {
-                const checkedEventList = eventData.filter(event => event.category == category);
+                const checkedEventList = fetchedData.events.filter(event => event.category == category && event.date < fetchedData.currentDate);
                 checkedEventList.forEach(event => checkEventCards.push(event));
+                
 
         });
      
      if(checkEventCards.length > 0){
         showPastEventList(checkEventCards)
      }
-     else{showPastEventList(eventData)}
+     else{ const pasEventList = fetchedData.events.filter(event => event.date < fetchedData.currentDate)
+        showPastEventList(pasEventList)}
+
 }

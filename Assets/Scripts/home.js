@@ -16,6 +16,7 @@ function getEventsData(){
                 fetchedData = dataApi;
                 /* console.log(fetchedData); */
                 const eventData = fetchedData.events;
+             
                 /* console.log(eventData); */
                showEventListJ(eventData);
                showCategories(eventData);
@@ -151,7 +152,7 @@ function filterCheckbox() {
         } );
 }
   
-
+filterCheckbox();
 
 
 let checkEventCards = [];
