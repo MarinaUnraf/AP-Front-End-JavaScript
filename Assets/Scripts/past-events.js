@@ -33,7 +33,7 @@ getEventsData();
 
 
         /* show past events cards */
-    function showPastEventList(arrData, dateToday) {
+    function showPastEventList(arrData) {
 
         let eventList = document.querySelector("#templateTarjetas")
 
@@ -151,14 +151,14 @@ let checkEventCards= [];
 function checkedCategoryCards(checked) {
         let checkEventCards = []
         
-        
+        /*    filtering and saving the  checked event  in an array  */
         checked.forEach(category => {
                 const checkedEventList = fetchedData.events.filter(event => event.category == category && event.date < fetchedData.currentDate);
                 checkedEventList.forEach(event => checkEventCards.push(event));
                 
 
         });
-     
+     /*  if the eventcards array is greater than zero, use the show past eventlist fuction with the checkeventcards array as input, else show the entire past event list */
      if(checkEventCards.length > 0){
         showPastEventList(checkEventCards)
      }
