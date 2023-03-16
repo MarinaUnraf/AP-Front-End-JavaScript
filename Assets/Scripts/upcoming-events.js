@@ -9,11 +9,11 @@ function getEventsData(){
     .then(dataApi => {
                 //console.log(dataApi);
                 fetchedData = dataApi;
-                console.log(fetchedData);
+                //console.log(fetchedData);
                 const eventData = fetchedData.events;
                 const upcomingEventData = fetchedData.events.filter(event => event.date > fetchedData.currentDate)
                
-                console.log(upcomingEventData);
+                //console.log(upcomingEventData);
                showEventListJ(upcomingEventData);
                showCategories(upcomingEventData);
                filterCheckbox();
@@ -25,6 +25,10 @@ function getEventsData(){
 getEventsData();
 
 
+
+
+
+
 function showEventListJ(arrData) {
 
     let eventList = document.querySelector("#templateTarjetas")
@@ -32,6 +36,7 @@ function showEventListJ(arrData) {
     eventList.innerHTML = ''
     
     let cardEventSaved =''
+    
     if (arrData.length > 0){
 
         arrData.forEach(event => {
@@ -82,39 +87,28 @@ function showCategories(arrData) {
 
 /* search events by form */
 
-
 /*Function input and search event name  */
 /* get element from DOM */
 const searchForm = document.querySelector("form");
-/* add listener to the event */
-searchForm.addEventListener('submit', inputEventName)
+const inputSearch = document.querySelector(".input-search")
+inputSearch.value = '';
+inputSearch.addEventListener("keyup", ()=>{
+    const value = inputSearch.value.toLowerCase();
+    
+    crossfilter(value,checkEventCards)
 
+})
 
-function inputEventName( event) {
-       
-    event.preventDefault();
-    /* capture input tex */
-    inputText = event.target[0].value.toLowerCase()
-        
-    if( checkEventCards.length > 0){
-        /* creating new object array filtering the event name */
-        newEventData = checkEventCards.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
-        showEventListJ(newEventData)
-    }
-    else if (checkEventCards.length == 0 ) {
-          /* creating new object array filtering the event name */
-          newEventData = fetchedData.events.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
-          showEventListJ(newEventData)
-    }
+/* add listener to the event submit */
+searchForm.addEventListener('submit', (e) =>{ e.preventDefault()});
 
-}
 
 /* filter events by category */
 
 function filterCheckbox() {
     
     let checkboxEvent = document.querySelectorAll(".form-check-input");
-    console.log(checkboxEvent);
+   // console.log(checkboxEvent);
     
     let checked = []
     checkboxEvent.forEach(checkbox => {
@@ -131,18 +125,40 @@ function filterCheckbox() {
         })
     } );
 }
+filterCheckbox();
+
 
 let checkEventCards = [];
+
+
 function checkedCategoryCards(checked) {
+
         let checkEventCards = []
+
         checked.forEach(category => {
                 const checkedEventList = fetchedData.events.filter(event => event.category == category && event.date > fetchedData.currentDate);
                 checkedEventList.forEach(event => checkEventCards.push(event));
 
         });
-     if(checkEventCards.length > 0){
-        showEventListJ(checkEventCards)
+    crossfilter(inputSearch.value.toLowerCase(),checkEventCards)
+}
+
+function crossfilter(value, checkEventCards) {
+
+    if(checkEventCards.length == 0 && value == "" ){
+        showEventListJ(fetchedData.events.filter( event => event.date > fetchedData.currentDate));
      }
-     else{ const futureEventsList = fetchedData.events.filter( event => event.date > fetchedData.currentDate)
-        showEventListJ(futureEventsList)}
+
+     else if(checkEventCards.length == 0 && value !== ""){
+        const   futureEventsList = fetchedData.events.filter( event => event.date > fetchedData.currentDate)
+        let  newEventData = futureEventsList.filter( (eventName) => eventName.name.toLowerCase().includes(value) || eventName.description.toLowerCase().includes(value) )
+         showEventListJ(newEventData);
+     }
+
+     else {
+        let  newEventData = checkEventCards.filter( (eventName) => eventName.name.toLowerCase().includes(value) || eventName.description.toLowerCase().includes(value) )
+        
+        showEventListJ(newEventData);
+     }
+     
 }

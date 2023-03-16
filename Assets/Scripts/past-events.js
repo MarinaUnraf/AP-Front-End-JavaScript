@@ -13,7 +13,7 @@ function getEventsData(){
     .then(dataApi => {
                 //console.log(dataApi);
                 fetchedData = dataApi;
-                console.log(fetchedData);
+                //console.log(fetchedData);
                 const eventData = fetchedData.events;
                 const pastEventData = fetchedData.events.filter(event => event.date < fetchedData.currentDate)
                
@@ -92,34 +92,25 @@ getEventsData();
         
     }
 
-    /* search events by form */
-
+/* search events by form */
 
 /*Function input and search event name  */
 /* get element from DOM */
 const searchForm = document.querySelector("form");
-/* add listener to the event */
-searchForm.addEventListener('submit', inputEventName)
+const inputSearch = document.querySelector(".input-search")
+inputSearch.value = '';
+inputSearch.addEventListener("keyup", ()=>{
+    const value = inputSearch.value.toLowerCase();
+    
+    crossfilter(value,checkEventCards)
+
+})
+
+/* add listener to the event submit */
+searchForm.addEventListener('submit', (e) =>{ e.preventDefault()});
 
 
-function inputEventName( event) {
-       
-    event.preventDefault();
-    /* capture input tex */
-    inputText = event.target[0].value.toLowerCase()
-        
-    if( checkEventCards.length > 0){
-        /* creating new object array filtering the event name */
-        newEventData = checkEventCards.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
-        showPastEventList(newEventData)
-    }
-    else if (checkEventCards.length == 0 ) {
-          /* creating new object array filtering the event name */
-          newEventData = fetchedData.events.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
-          showPastEventList(newEventData)
-    }
 
-}
 
 /* filter events by category */
 
@@ -158,11 +149,28 @@ function checkedCategoryCards(checked) {
                 
 
         });
-     /*  if the eventcards array is greater than zero, use the show past eventlist fuction with the checkeventcards array as input, else show the entire past event list */
-     if(checkEventCards.length > 0){
-        showPastEventList(checkEventCards)
-     }
-     else{ const pasEventList = fetchedData.events.filter(event => event.date < fetchedData.currentDate)
-        showPastEventList(pasEventList)}
+    crossfilter(inputSearch.value.toLowerCase(),checkEventCards) 
+    
 
+}
+
+
+function crossfilter(value, checkEventCards) {
+
+    if(checkEventCards.length == 0 && value == "" ){
+        
+        showPastEventList(fetchedData.events.filter(event => event.date < fetchedData.currentDate));
+     }
+     else if(checkEventCards.length == 0 && value !== ""){
+        const pasEventList = fetchedData.events.filter(event => event.date < fetchedData.currentDate)
+        let  newEventData = pasEventList.filter( (eventName) => eventName.name.toLowerCase().includes(value) || eventName.description.toLowerCase().includes(value) )
+        
+        showPastEventList(newEventData);
+     }
+     else {
+        let  newEventData = checkEventCards.filter( (eventName) => eventName.name.toLowerCase().includes(value) || eventName.description.toLowerCase().includes(value) )
+        
+        showPastEventList(newEventData);
+     }
+     
 }

@@ -22,6 +22,7 @@ function getEventsData(){
                showCategories(eventData);
                filterCheckbox();
                checkedCategoryCards(eventData);
+            
                 
     } )
 
@@ -92,42 +93,20 @@ getEventsData();
     }
 /* search events by form */
 
-
 /*Function input and search event name  */
 /* get element from DOM */
 const searchForm = document.querySelector("form");
-/* add listener to the event */
-searchForm.addEventListener('submit', inputEventName)
-
-let newEventData = [];
-
-function inputEventName( event) {
-       
-    event.preventDefault();
-    /* capture input tex */
-    inputText = event.target[0].value.toLowerCase()
-        
-    if( checkEventCards.length > 0){
-        /* creating new object array filtering the event name */
-        newEventData = checkEventCards.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
-        showEventListJ(newEventData)
-    }
-    else if (checkEventCards.length == 0 ) {
-          /* creating new object array filtering the event name */
-          newEventData = fetchedData.events.filter( (eventName) => eventName.name.toLowerCase().includes(inputText) || eventName.description.toLowerCase().includes(inputText) )
-          showEventListJ(newEventData)
-    }
-
+const inputSearch = document.querySelector(".input-search")
+inputSearch.value = '';
+inputSearch.addEventListener("keyup", ()=>{
+    const value = inputSearch.value.toLowerCase();
     
-    
-    
-    
-}
+    crossfilter(value,checkEventCards)
 
-
-/* filter events by category */
-
-
+})
+console.log(inputSearch);
+/* add listener to the event submit */
+searchForm.addEventListener('submit', (e) =>{ e.preventDefault()});
 
 
 function filterCheckbox() {
@@ -158,16 +137,33 @@ filterCheckbox();
 let checkEventCards = [];
 function checkedCategoryCards(checked) {
     checkEventCards = [];
-    console.log(checkEventCards);
+    
     checked.forEach(category => {
             const checkedEventList = fetchedData.events.filter(event => event.category == category);
             checkedEventList.forEach(event => checkEventCards.push(event));
 
     });
-    if(checkEventCards.length > 0){
-        showEventListJ(checkEventCards)
-     }
-     else{showEventListJ(fetchedData.events)}
+    crossfilter(inputSearch.value.toLowerCase(),checkEventCards)
 }
+
+function crossfilter(value, checkEventCards) {
+
+        if(checkEventCards.length == 0 && value == "" ){
+            showEventListJ(fetchedData.events);
+         }
+         else if(checkEventCards.length == 0 && value !== ""){
+            let  newEventData = fetchedData.events.filter( (eventName) => eventName.name.toLowerCase().includes(value) || eventName.description.toLowerCase().includes(value) )
+            
+            showEventListJ(newEventData);
+         }
+         else {
+            let  newEventData = checkEventCards.filter( (eventName) => eventName.name.toLowerCase().includes(value) || eventName.description.toLowerCase().includes(value) )
+            
+            showEventListJ(newEventData);
+         }
+         
+    }
+    
+
 
 
