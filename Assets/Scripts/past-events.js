@@ -134,7 +134,7 @@ function filterCheckbox() {
         })
     } );
 }
-filterCheckbox();
+
 
 let checkEventCards= [];
 
