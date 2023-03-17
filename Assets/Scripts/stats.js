@@ -12,11 +12,11 @@ function getEventsData(){
                 const currentDate = fetchedData.currentDate;
                 /* console.log(eventData); */
                
-                calculateMax(eventData,currentDate);
-                calculePercent(eventData)
+                calculations(eventData,currentDate);
                 
                 
                 
+               
                 
                 
                 
@@ -28,32 +28,7 @@ function getEventsData(){
 getEventsData();
 
 /* calculate the attendance percent  event */
-    function calculePercent(arrData) {
     
-        let percents= []
-        arrData.forEach(element => {
-            if(element.assistance){
-                let percent= (element.assistance *100)/ element.capacity;
-                percent= percent.toFixed(2);
-                percents.push(percent)
-            }
-            else if(element.estimate){
-                let percent= (element.estimate *100)/ element.capacity;
-                percent= percent.toFixed(2);
-                percents.push(percent)
-            }
-            
-            
-            
-        });
-        console.log(percents);
-
-        let maxPercent = Math.max(...percents);
-        console.log(maxPercent);
-        let result2 = ""
-        
-
-    }
 
 
 /* calculate  max percent attendance */
@@ -61,26 +36,81 @@ getEventsData();
 /* calculate the min percent attendance */
 
 
-/* calculate the event with largest capacity */
-function calculateMax(arrData, dateToday) {
+function calculations (arrData, dateToday) {
+   
+    /* calculating  percent events */
+     let percents= []
+        arrData.forEach(element => {
+            if(element.assistance){
+                let percent= (element.assistance *100)/ element.capacity;
+                percent= percent.toFixed(2);
+                percents.push(percent)
+            }
+            /* else if(element.estimate){
+                let percent= (element.estimate *100)/ element.capacity;
+                percent= percent.toFixed(2);
+                percents.push(percent)
+            }
+             */
+            
+            
+        });
+        console.log(percents);
+
+        /* highest percent */
+        let maxPercent = Math.max(...percents);
+        console.log(maxPercent);
+
+        let eventArrMaxAttendance = arrData.filter(event => (((event.assistance *100)/event.capacity).toFixed(2) == maxPercent || ((event.estimate *100)/event.capacity).toFixed(2) == maxPercent ))
+        //console.log(eventArrMaxAttendance);
+        let eventMaxAttendance = eventArrMaxAttendance.map(name => name.name)
+        //console.log(eventMaxAttendance);
+
+        
+        let result2 = eventMaxAttendance[0];
+
+
+
+        /* lowest percent */
+        let minPercent = Math.min(...percents);
+        console.log(minPercent);
+        let eventArrMinAttendance = arrData.filter(event => (((event.assistance *100)/event.capacity).toFixed(2) == minPercent || ((event.estimate *100)/event.capacity).toFixed(2) == minPercent ))
+        let eventMinAttendance = eventArrMinAttendance.map(name => name.name)
+
+
+        let result3 = eventMinAttendance[0];
+
+
+   /* calculating event with the highest capacity  */
     const evCapacity = arrData.map(eventCapacity => eventCapacity.capacity);
     let maxCap = Math.max(...evCapacity);
     
     let eventMaxCapacity = arrData.filter(event => event.capacity == maxCap && event.date < dateToday)
     let result = eventMaxCapacity.map(name => name.name) 
-    showtable(result, 0)
+    
+    
+    
+    
+    
+    
+    
+    
+    showtable(result,result2,result3)
+    
     
 }
 
 
 /* show data in table */
-    const showtable = (param1,param2) => {
+    const showtable = (param1,param2, param3) => {
         let rowContainer = document.getElementById("eventsStatistics");
         let register = ''
         register += ` 
-        <td>...</td>
-        <td>${param2}</td>
-        <td>${param1}</td>
+
+        <td class= "text-center">${param2}</td>
+        <td class= "text-center">${param3}</td>
+        
+        <td class= "text-center">${param1}</td>
         
         `;
         rowContainer.innerHTML = register
