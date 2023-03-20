@@ -13,6 +13,7 @@ function getEventsData(){
                 /* console.log(eventData); */
                
                 calculations(eventData,currentDate);
+                pastEvenCalculus(eventData, currentDate);
                 
                 
                 
@@ -27,13 +28,7 @@ function getEventsData(){
 }
 getEventsData();
 
-/* calculate the attendance percent  event */
-    
 
-
-/* calculate  max percent attendance */
-
-/* calculate the min percent attendance */
 
 
 function calculations (arrData, dateToday) {
@@ -98,6 +93,22 @@ function calculations (arrData, dateToday) {
     showtable(result,result2,result3)
     
     
+}
+
+function pastEvenCalculus(arrData, dateToday){
+
+
+    let pastEventsList = arrData.filter(eDate => eDate.date < dateToday)
+    console.log(pastEventsList);
+
+    let pastEventsRevenue = [];
+    
+        pastEventsList.forEach((eRev) => {
+            let evReveneue = eRev.assistance * eRev.price
+            pastEventsRevenue.push(evReveneue);
+        } )
+    console.log(pastEventsRevenue);
+
 }
 
 
