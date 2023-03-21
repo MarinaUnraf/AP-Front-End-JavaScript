@@ -37,16 +37,4 @@ footer div a{
     object-fit: cover;
 }
 
-/* table styles */
-.table-active{
-    border-color:#1a246c;
 
-}
-.bg-primary{
-    border-color: #1a246c;
-}
-
-.table{
-    border: 3px solid #363131;
-    
-}
